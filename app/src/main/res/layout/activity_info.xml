@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:background="@drawable/custom_background_info"
+    tools:context="com.blogspot.luongcongdu.appdoctintuc.V.InfoActivity">
+
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:textColor="#000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Ứng dụng đọc tin tức H2D News"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <TextView
+            android:textColor="#000"
+            android:layout_marginTop="16dp"
+            android:text="Phát triển bởi H2D Team"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="#000"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:text="Thành viên thực hiện:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="#000"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Lương Công Du (KTPM2 - K9 - HaUI)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="#000"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Nguyễn Xuân Hoàng (KTPM2 - K9 - HaUI)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="#000"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Cao Đức Huy (KTPM2 - K9 - HaUI)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:text="Bản quyền nội dung tin tức thuộc về VnExpress"
+            android:layout_marginTop="48dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:background="@drawable/vne_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="48dp"
+            android:textColor="#000"
+            android:text="Mọi ý kiến đóng góp xin gửi về địa chỉ email:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/txt_email_contact"
+            android:textColor="#0062ff"
+            android:text="congdu.it@gmail.com"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

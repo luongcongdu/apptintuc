@@ -7,7 +7,7 @@
     android:layout_margin="4dp"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.blogspot.luongcongdu.appdoctintuc.MainActivity"
+    tools:context="com.blogspot.luongcongdu.appdoctintuc.V.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <TextView
