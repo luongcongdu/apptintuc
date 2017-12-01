@@ -81,6 +81,14 @@ public class TopicActivity extends AppCompatActivity {
 
             }
         });
+
+        lvTopic.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(TopicActivity.this, "Long", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 
     //class thực hiện lấy dữ liệu

@@ -11,7 +11,7 @@
         android:layout_marginTop="100dp"
         android:gravity="center"
         android:textColor="#000"
-        android:text="Ứng dụng cần truy cập mạng. Hãy kiểm tra kết nối mạng của thiết bị!"
+        android:text="@string/ket_noi_mang"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -27,5 +27,5 @@
         android:layout_marginTop="16dp"
         android:drawableLeft="@android:drawable/ic_menu_revert"
         android:drawablePadding="8dp"
-        android:text="Tải lại" />
+        android:text="@string/tai_lai" />
 </LinearLayout>

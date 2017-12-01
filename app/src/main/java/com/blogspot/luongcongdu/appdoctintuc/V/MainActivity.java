@@ -44,6 +44,9 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import luongcongdu.blogspot.com.checkinternet.CheckInternet;
+import luongcongdu.blogspot.com.contact.Contact;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,26 +58,29 @@ public class MainActivity extends AppCompatActivity
     ProgressDialog dialog;
     Button btnReload;
     boolean doubleBackToExitPressedOnce = false;
+    boolean isInternet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        CheckInternet checkInternet = new CheckInternet(this);
+        isInternet = checkInternet.isNetworkConnected();
 
-        isOnline();
-        if (isOnline()) {
+        Log.d("ISOnLINE", String.valueOf(isInternet));
+        // isOnline();
+        if (isInternet == true) {
             Log.d("ONLINE", "ONLINE");
             setContentView(R.layout.activity_main);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
-            //chạy dialog
             dialog = new ProgressDialog(this);
             dialog.setMessage("Đang tải...");
             dialog.setCancelable(false);
             dialog.show();
 
-            //lấy tin mới
+            //get new news
             new DownloadTask().execute(MY_URL);
 
 
@@ -113,13 +119,12 @@ public class MainActivity extends AppCompatActivity
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     Intent iTopic = new Intent(MainActivity.this,
                             TopicActivity.class).putExtra("LINK_TOPIC", listTopic.get(position).getLink());
-
                     iTopic.putExtra("TITLE", listTopic.get(position).getName());
                     startActivity(iTopic);
                 }
             });
         } else {
-            //nếu không có mạng, hiển thị màn hình thông báo và thông báo
+
             setContentView(R.layout.activity_error_internet);
             btnReload = (Button) findViewById(R.id.btn_reload);
             btnReload.setOnClickListener(onReloadClick);
@@ -134,21 +139,18 @@ public class MainActivity extends AppCompatActivity
             isOnline();
 
             if (isOnline()) {
-                //nếu có mạng, set layout mặc định
                 setContentView(R.layout.activity_main);
 
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
-                //chạy dialog
                 dialog = new ProgressDialog(MainActivity.this);
                 dialog.setMessage("Đang tải...");
                 dialog.setCancelable(false);
                 dialog.show();
 
-                //lấy tin mới
+                //get new news
                 new DownloadTask().execute(MY_URL);
-
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -185,11 +187,12 @@ public class MainActivity extends AppCompatActivity
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         Intent iTopic = new Intent(MainActivity.this,
                                 TopicActivity.class).putExtra("LINK_TOPIC", listTopic.get(position).getLink());
+                        iTopic.putExtra("TITLE", listTopic.get(position).getName());
                         startActivity(iTopic);
                     }
                 });
             } else {
-                //nếu không có mạng, hiển thị màn hình thông báo và thông báo
+
                 setContentView(R.layout.activity_error_internet);
                 btnReload = (Button) findViewById(R.id.btn_reload);
                 btnReload.setOnClickListener(onReloadClick);
@@ -216,7 +219,7 @@ public class MainActivity extends AppCompatActivity
         listTopic.add(new Topic("15", "Cười", R.drawable.funny, "https://vnexpress.net/rss/cuoi.rss"));
     }
 
-    //class thực hiện lấy dữ liệu
+    //class get data from web
     private class DownloadTask extends AsyncTask<String, Void, ArrayList<NewNews>> {
 
 
@@ -339,7 +342,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Ấn một lần nữa để thoát ứng dụng", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Nhấn trở lại một lần nữa để thoát", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -350,28 +353,28 @@ public class MainActivity extends AppCompatActivity
         }, 2000);
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            this.setTheme(R.style.AppThemeDark);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+       // getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_save) {
+//            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
 //            return true;
 //        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -384,16 +387,18 @@ public class MainActivity extends AppCompatActivity
 //            Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
 //        }
         if (id == R.id.nav_contact) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/html");
-            String[] emailTo = new String[]{"congdu.it@gmail.com"};
-            String subject = ("Phản hồi từ người sử dụng H2D News");
-            intent.putExtra(Intent.EXTRA_EMAIL, emailTo);
-            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-            intent.putExtra(Intent.EXTRA_TEXT, "Nhập nội dung...");
+//            Intent intent = new Intent(Intent.ACTION_SEND);
+//            intent.setType("text/html");
+//            String[] emailTo = new String[]{"congdu.it@gmail.com"};
+//            String subject = ("Phản hồi từ người sử dụng H2D News");
+//            intent.putExtra(Intent.EXTRA_EMAIL, emailTo);
+//            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+//            intent.putExtra(Intent.EXTRA_TEXT, "Nhập nội dung...");
+//            startActivity(Intent.createChooser(intent, "Send Email"));
 
+            Contact contact = new Contact(this);
+            contact.contact("congdu.it@gmail.com","Phản hồi từ người sử dụng H2D News","Nhập nội dung...");
 
-            startActivity(Intent.createChooser(intent, "Send Email"));
         } else if (id == R.id.nav_info) {
             Intent iInfo = new Intent(MainActivity.this, InfoActivity.class);
             startActivity(iInfo);

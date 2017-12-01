@@ -4,10 +4,10 @@
 
     <item android:title="Tùy chọn">
         <menu>
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Chia sẻ"/>-->
+            <item
+                android:id="@+id/nav_save"
+                android:icon="@drawable/download"
+                android:title="Trang đã lưu"/>
             <item
                 android:id="@+id/nav_contact"
                 android:icon="@drawable/contact"
