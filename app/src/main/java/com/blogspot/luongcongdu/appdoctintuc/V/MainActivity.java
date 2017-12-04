@@ -44,12 +44,13 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import luongcongdu.blogspot.com.checkinternet.CheckInternet;
 import luongcongdu.blogspot.com.contact.Contact;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     String MY_URL = "https://vnexpress.net/rss/tin-moi-nhat.rss";
     ViewFlipper flipperNewNews;
     GridView gridTopic;
@@ -57,16 +58,24 @@ public class MainActivity extends AppCompatActivity
     AdapterTopic adapter;
     ProgressDialog dialog;
     Button btnReload;
+    Button btnReadOffline;
     boolean doubleBackToExitPressedOnce = false;
     boolean isInternet = false;
+    Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
+        Realm.init(context);
+        Realm realm = Realm.getInstance(new RealmConfiguration.Builder()
+                .name("readrssvn.realm")
+                .build()
+        );
 
         CheckInternet checkInternet = new CheckInternet(this);
         isInternet = checkInternet.isNetworkConnected();
-
         Log.d("ISOnLINE", String.valueOf(isInternet));
         // isOnline();
         if (isInternet == true) {
@@ -124,11 +133,19 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         } else {
-
             setContentView(R.layout.activity_error_internet);
             btnReload = (Button) findViewById(R.id.btn_reload);
             btnReload.setOnClickListener(onReloadClick);
-            Toast.makeText(this, "Ứng dụng cần truy cập mạng. Hãy kiểm tra kết nối mạng của thiết bị!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ứng dụng cần truy cập mạng. Hãy kiểm tra kết nối mạng của thiết bị!",
+                    Toast.LENGTH_LONG).show();
+            btnReadOffline = (Button) findViewById(R.id.btn_read_offline);
+            btnReadOffline.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent iReadOffline = new Intent(MainActivity.this, ArticleSavedActivity.class);
+                    startActivity(iReadOffline);
+                }
+            });
         }
 
     }
@@ -197,6 +214,15 @@ public class MainActivity extends AppCompatActivity
                 btnReload = (Button) findViewById(R.id.btn_reload);
                 btnReload.setOnClickListener(onReloadClick);
                 Toast.makeText(MainActivity.this, "Ứng dụng cần truy cập mạng. Hãy kiểm tra kết nối mạng của thiết bị!", Toast.LENGTH_LONG).show();
+
+                btnReadOffline = (Button) findViewById(R.id.btn_read_offline);
+                btnReadOffline.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent iReadOffline = new Intent(MainActivity.this, ArticleSavedActivity.class);
+                        startActivity(iReadOffline);
+                    }
+                });
             }
         }
     };
@@ -303,6 +329,7 @@ public class MainActivity extends AppCompatActivity
 
                     Intent iNewNews = new Intent(MainActivity.this,
                             DetailsNewNewsActivity.class).putExtra("LINK_NEW_NEWS", newNews.getLink());
+                    iNewNews.putExtra("TITLE_NEW_NEWS",newNews.getTitle());
                     startActivity(iNewNews);
                 }
             });
@@ -356,7 +383,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.main, menu);
+        // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -367,7 +394,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+//        noinspection SimplifiableIfStatement
 //        if (id == R.id.action_save) {
 //            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
 //            return true;
@@ -382,10 +409,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-//        if (id == R.id.nav_share) {
-//            // Handle the camera action
-//            Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
-//        }
+        if (id == R.id.nav_save) {
+            // Handle the camera action
+            Intent intent = new Intent(this, ArticleSavedActivity.class);
+            startActivity(intent);
+        }
         if (id == R.id.nav_contact) {
 //            Intent intent = new Intent(Intent.ACTION_SEND);
 //            intent.setType("text/html");
@@ -397,7 +425,7 @@ public class MainActivity extends AppCompatActivity
 //            startActivity(Intent.createChooser(intent, "Send Email"));
 
             Contact contact = new Contact(this);
-            contact.contact("congdu.it@gmail.com","Phản hồi từ người sử dụng H2D News","Nhập nội dung...");
+            contact.contact("congdu.it@gmail.com", "Phản hồi từ người sử dụng H2D News", "Nhập nội dung...");
 
         } else if (id == R.id.nav_info) {
             Intent iInfo = new Intent(MainActivity.this, InfoActivity.class);

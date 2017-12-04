@@ -76,6 +76,7 @@ public class TopicActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent iArticle = new Intent(TopicActivity.this,
                         DetailsArticleActivity.class).putExtra("LINK_ARTICLE", listArticle.get(position).getLink());
+                iArticle.putExtra("TITLE_ARTICLE",listArticle.get(position).getTitle());
                 Log.d("ARTICLE", listArticle.get(position).getLink());
                 startActivity(iArticle);
 

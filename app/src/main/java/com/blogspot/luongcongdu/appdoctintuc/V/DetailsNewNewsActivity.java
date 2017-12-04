@@ -3,7 +3,9 @@ package com.blogspot.luongcongdu.appdoctintuc.V;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ public class DetailsNewNewsActivity extends AppCompatActivity {
 
     Intent iNewNews;
     String linkNewNews;
+    String titleNewNews;
     WebView wbNewNews;
     ProgressDialog dialog;
 
@@ -37,6 +40,7 @@ public class DetailsNewNewsActivity extends AppCompatActivity {
         //lấy link trang new News bên MainActivity
         iNewNews = getIntent();
         linkNewNews = iNewNews.getStringExtra("LINK_NEW_NEWS");
+        titleNewNews = iNewNews.getStringExtra("TITLE_NEW_NEWS");
         Log.d("LINK_NEWS", linkNewNews);
 
         wbNewNews = (WebView) findViewById(R.id.wb_new_news);
@@ -81,7 +85,16 @@ public class DetailsNewNewsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            //Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+            GetDataToHTML getDataToHTML = new GetDataToHTML(DetailsNewNewsActivity.this);
+            getDataToHTML.execute(linkNewNews);
+
+            //store title
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("title_article", titleNewNews);
+            editor.commit();
+
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
